@@ -1,0 +1,48 @@
+r.table("ProvDivs").insert([
+  { date:"25-02-2016", race: "MR1", starter:1, divs:1.3},
+  { date:"25-02-2016", race: "MR1", starter:2, divs:1.3},
+  { date:"25-02-2016", race: "MR1", starter:3, divs:1.3},
+  { date:"25-02-2016", race: "MR1", starter:4, divs:1.3},
+  { date:"25-02-2016", race: "MR1", starter:5, divs:1.3},
+  { date:"25-02-2016", race: "MR1", starter:6, divs:1.3},
+  { date:"25-02-2016", race: "MR1", starter:7, divs:1.3},
+  { date:"25-02-2016", race: "MR1", starter:8, divs:1.3}
+])
+
+
+r.db("test").table("ProvDivs").indexCreate("starter")
+r.db("test").table("ProvDivs").orderBy({index:r.desc("starter")}).filter({race:"MR1"}).limit(5)
+ 
+/**this causes crash**/
+  return r.db("test").table("players").orderBy({index:'score'}).limit(5).changes().run(conn);
+/**this doesn't **/
+  return r.db("test").table("players").orderBy({index:'score'}).changes().run(conn);
+  
+//previous example 
+var r = require("rethinkdb");
+var app = require("express")();
+app.listen(8070);
+console.log("App listening on port 8070");
+ 
+app.get("/ProvDivs/race/:race",function(req,res){
+	r.connect().then(function(conn){
+	return r.db("test").table("ProvDivs").filter({race:req.params.race}).run(conn).finally(function(){conn.close();});
+})
+.then(function(cursor){
+	return cursor.toArray();
+})
+.then(function(output){
+	console.log("Query output:", output);
+	res.json(output);
+})
+.error(function(err){
+	console.log("Failed",err);
+	res.status(500).json({err: err});
+})
+});
+
+on connection:
+ r.connect().then(function(conn){
+		return getLeaders.run(conn).finally(function(){conn.close();});
+	})
+	.then(function(output){socket.emit("leaders",output);});

@@ -1,0 +1,4 @@
+{
+"proxy":"http://proxy.rwwa.com.au:80",
+"https-proxy":"https://proxy.rwwa.com.au:80"
+}
